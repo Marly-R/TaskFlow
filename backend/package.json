@@ -1,0 +1,28 @@
+{
+  "name": "taskflow-backend",
+  "version": "1.0.0",
+  "description": "Backend de TaskFlow desarrollado con Node.js",
+  "keywords": [
+    "task",
+    "manager",
+    "todo",
+    "nodejs",
+    "express",
+    "react"
+  ],
+  "homepage": "https://github.com/Marly-R/TaskFlow#readme",
+  "bugs": {
+    "url": "https://github.com/Marly-R/TaskFlow/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marly-R/TaskFlow.git"
+  },
+  "license": "ISC",
+  "author": "Marly Galarza",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
