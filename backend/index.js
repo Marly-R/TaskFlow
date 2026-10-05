@@ -33,10 +33,26 @@ app.get("/tareas/:id", (peticion, respuesta) => {
 
 app.post("/tareas", (peticion, respuesta) => {
 
+    const { titulo, prioridad } = peticion.body;
+
+    if (!titulo) {
+        return respuesta.status(400).json({
+            error: "El título es obligatorio"
+        });
+    }
+
+    const prioridadesValidas = ["alta", "media", "baja"];
+
+    if (!prioridadesValidas.includes(prioridad)) {
+        return respuesta.status(400).json({
+            error: "La prioridad debe ser alta, media o baja"
+        });
+    }
+
     const nuevaTarea = {
         id: siguienteId,
-        titulo: peticion.body.titulo,
-        prioridad: peticion.body.prioridad
+        titulo: titulo,
+        prioridad: prioridad
     };
 
     tareas.push(nuevaTarea);
@@ -62,8 +78,24 @@ app.put("/tareas/:id", (peticion, respuesta) => {
         });
     }
 
-    tarea.titulo = peticion.body.titulo;
-    tarea.prioridad = peticion.body.prioridad;
+    const { titulo, prioridad } = peticion.body;
+
+    if (!titulo) {
+        return respuesta.status(400).json({
+            error: "El título es obligatorio"
+        });
+    }
+
+    const prioridadesValidas = ["alta", "media", "baja"];
+
+    if (!prioridadesValidas.includes(prioridad)) {
+        return respuesta.status(400).json({
+            error: "La prioridad debe ser alta, media o baja"
+        });
+    }
+
+    tarea.titulo = titulo;
+    tarea.prioridad = prioridad;
 
     respuesta.json({
         mensaje: "Tarea actualizada correctamente",
