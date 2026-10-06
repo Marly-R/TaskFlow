@@ -25,7 +25,7 @@ function App() {
     <div>
       <Navbar titulo="TaskFlow" />
 
-      <h1>TaskFlow - Login</h1>
+      <h1>TaskFlow - Gestor de tareas</h1>
       <p>Mi gestor de tareas</p>
 
       <TaskForm onTareaCreada={obtenerTareas} />
