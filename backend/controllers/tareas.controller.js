@@ -1,12 +1,28 @@
-export const tareas = [];
+import conexion from "../db.js";
 
-export let siguienteId = 1;
+export const obtenerTareas = async (peticion, respuesta) => {
 
-export const obtenerTareas = (peticion, respuesta) => {
-    respuesta.json(tareas);
+    try {
+
+        const [tareas] = await conexion.query(
+            "SELECT * FROM tareas"
+        );
+
+        respuesta.json(tareas);
+
+    } catch (error) {
+
+        console.error("Error al obtener tareas:", error.message);
+
+        respuesta.status(500).json({
+            error: "Error al obtener las tareas"
+        });
+
+    }
+
 };
 
-export const crearTarea = (peticion, respuesta) => {
+export const crearTarea = async (peticion, respuesta) => {
 
     const { titulo, prioridad } = peticion.body;
 
@@ -24,48 +40,37 @@ export const crearTarea = (peticion, respuesta) => {
         });
     }
 
-    const nuevaTarea = {
-        id: siguienteId,
-        titulo: titulo,
-        prioridad: prioridad
-    };
+    try {
 
-    tareas.push(nuevaTarea);
+        const [resultado] = await conexion.query(
+            "INSERT INTO tareas (titulo, prioridad) VALUES (?, ?)",
+            [titulo, prioridad]
+        );
 
-    siguienteId++;
-
-    respuesta.status(201).json({
-        mensaje: "Tarea creada correctamente",
-        tarea: nuevaTarea
-    });
-};
-
-export const obtenerTareaPorId = (peticion, respuesta) => {
-
-    const id = Number(peticion.params.id);
-
-    const tarea = tareas.find(tarea => tarea.id === id);
-
-    if (!tarea) {
-        return respuesta.status(404).json({
-            error: "Tarea no encontrada"
+        respuesta.status(201).json({
+            mensaje: "Tarea creada correctamente",
+            tarea: {
+                id: resultado.insertId,
+                titulo: titulo,
+                prioridad: prioridad
+            }
         });
+
+    } catch (error) {
+
+        console.error("Error al crear tarea:", error.message);
+
+        respuesta.status(500).json({
+            error: "Error al crear la tarea"
+        });
+
     }
 
-    respuesta.json(tarea);
 };
 
-export const actualizarTarea = (peticion, respuesta) => {
+export const actualizarTarea = async (peticion, respuesta) => {
 
     const id = Number(peticion.params.id);
-
-    const tarea = tareas.find(tarea => tarea.id === id);
-
-    if (!tarea) {
-        return respuesta.status(404).json({
-            error: "Tarea no encontrada"
-        });
-    }
 
     const { titulo, prioridad } = peticion.body;
 
@@ -83,31 +88,99 @@ export const actualizarTarea = (peticion, respuesta) => {
         });
     }
 
-    tarea.titulo = titulo;
-    tarea.prioridad = prioridad;
+    try {
 
-    respuesta.json({
-        mensaje: "Tarea actualizada correctamente",
-        tarea: tarea
-    });
+        const [resultado] = await conexion.query(
+            "UPDATE tareas SET titulo = ?, prioridad = ? WHERE id = ?",
+            [titulo, prioridad, id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return respuesta.status(404).json({
+                error: "Tarea no encontrada"
+            });
+        }
+
+        respuesta.json({
+            mensaje: "Tarea actualizada correctamente",
+            tarea: {
+                id: id,
+                titulo: titulo,
+                prioridad: prioridad
+            }
+        });
+
+    } catch (error) {
+
+        console.error("Error al actualizar tarea:", error.message);
+
+        respuesta.status(500).json({
+            error: "Error al actualizar la tarea"
+        });
+
+    }
 };
 
-export const eliminarTarea = (peticion, respuesta) => {
+export const eliminarTarea = async (peticion, respuesta) => {
 
     const id = Number(peticion.params.id);
 
-    const indice = tareas.findIndex(tarea => tarea.id === id);
+    try {
 
-    if (indice === -1) {
-        return respuesta.status(404).json({
-            error: "Tarea no encontrada"
+        const [resultado] = await conexion.query(
+            "DELETE FROM tareas WHERE id = ?",
+            [id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return respuesta.status(404).json({
+                error: "Tarea no encontrada"
+            });
+        }
+
+        respuesta.json({
+            mensaje: "Tarea eliminada correctamente",
+            id: id
         });
+
+    } catch (error) {
+
+        console.error("Error al eliminar tarea:", error.message);
+
+        respuesta.status(500).json({
+            error: "Error al eliminar la tarea"
+        });
+
+    }
+};
+
+export const obtenerTareaPorId = async (peticion, respuesta) => {
+
+    const id = Number(peticion.params.id);
+
+    try {
+
+        const [tareas] = await conexion.query(
+            "SELECT * FROM tareas WHERE id = ?",
+            [id]
+        );
+
+        if (tareas.length === 0) {
+            return respuesta.status(404).json({
+                error: "Tarea no encontrada"
+            });
+        }
+
+        respuesta.json(tareas[0]);
+
+    } catch (error) {
+
+        console.error("Error al obtener tarea:", error.message);
+
+        respuesta.status(500).json({
+            error: "Error al obtener la tarea"
+        });
+
     }
 
-    const tareaEliminada = tareas.splice(indice, 1);
-
-    respuesta.json({
-        mensaje: "Tarea eliminada correctamente",
-        tarea: tareaEliminada[0]
-    });
 };

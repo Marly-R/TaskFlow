@@ -1,5 +1,6 @@
 import express from "express";
 import tareasRoutes from "./routes/tareas.routes.js";
+import conexion from "./db.js";
 
 const app = express();
 
