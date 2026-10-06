@@ -1,9 +1,10 @@
 import express from "express";
+import cors from "cors";
 import tareasRoutes from "./routes/tareas.routes.js";
-import conexion from "./db.js";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/tareas", tareasRoutes);
