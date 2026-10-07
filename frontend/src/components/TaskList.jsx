@@ -17,6 +17,7 @@ function TaskList({ tareas, onTareaActualizada }) {
                 <div key={tarea.id}>
                     <h3>{tarea.titulo}</h3>
                     <p>Prioridad: {tarea.prioridad}</p>
+                    <p>Estado: Pendiente</p>
 
                     <button onClick={() => eliminarTarea(tarea.id)}>
                         Eliminar
