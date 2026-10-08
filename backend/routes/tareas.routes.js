@@ -1,17 +1,18 @@
 import express from "express";
+import { verificarToken } from "../middleware/auth.middleware.js";
 
 import { obtenerTareas, crearTarea, obtenerTareaPorId, actualizarTarea, eliminarTarea } from "../controllers/tareas.controller.js";
 
 const router = express.Router();
 
-router.get("/", obtenerTareas);
+router.get("/", verificarToken, obtenerTareas);
 
-router.post("/", crearTarea);
+router.post("/", verificarToken, crearTarea);
 
-router.get("/:id", obtenerTareaPorId);
+router.get("/:id", verificarToken, obtenerTareaPorId);
 
-router.put("/:id", actualizarTarea);
+router.put("/:id", verificarToken, actualizarTarea);
 
-router.delete("/:id", eliminarTarea);
+router.delete("/:id", verificarToken, eliminarTarea);
 
 export default router;

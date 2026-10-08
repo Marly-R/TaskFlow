@@ -5,7 +5,8 @@ export const obtenerTareas = async (peticion, respuesta) => {
     try {
 
         const [tareas] = await conexion.query(
-            "SELECT * FROM tareas"
+            "SELECT * FROM tareas WHERE usuario_id = ?",
+            [peticion.usuario.id]
         );
 
         respuesta.json(tareas);
@@ -19,7 +20,6 @@ export const obtenerTareas = async (peticion, respuesta) => {
         });
 
     }
-
 };
 
 export const crearTarea = async (peticion, respuesta) => {
@@ -43,8 +43,8 @@ export const crearTarea = async (peticion, respuesta) => {
     try {
 
         const [resultado] = await conexion.query(
-            "INSERT INTO tareas (titulo, prioridad) VALUES (?, ?)",
-            [titulo, prioridad]
+            "INSERT INTO tareas (titulo, prioridad, usuario_id) VALUES (?, ?, ?)",
+            [titulo, prioridad, peticion.usuario.id]
         );
 
         respuesta.status(201).json({
@@ -91,8 +91,8 @@ export const actualizarTarea = async (peticion, respuesta) => {
     try {
 
         const [resultado] = await conexion.query(
-            "UPDATE tareas SET titulo = ?, prioridad = ? WHERE id = ?",
-            [titulo, prioridad, id]
+            "UPDATE tareas SET titulo = ?, prioridad = ? WHERE id = ? AND usuario_id = ?",
+            [titulo, prioridad, id, peticion.usuario.id]
         );
 
         if (resultado.affectedRows === 0) {
@@ -128,8 +128,8 @@ export const eliminarTarea = async (peticion, respuesta) => {
     try {
 
         const [resultado] = await conexion.query(
-            "DELETE FROM tareas WHERE id = ?",
-            [id]
+            "DELETE FROM tareas WHERE id = ? AND usuario_id = ?",
+            [id, peticion.usuario.id]
         );
 
         if (resultado.affectedRows === 0) {
