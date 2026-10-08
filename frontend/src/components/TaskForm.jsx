@@ -9,16 +9,19 @@ function TaskForm({ onTareaCreada }) {
 
         console.log("Botón presionado");
 
-        const respuesta = await fetch("http://localhost:3000/tareas", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                titulo: titulo,
-                prioridad: prioridad
-            })
-        });
+        const token = localStorage.getItem("token");
+
+const respuesta = await fetch("http://localhost:3000/tareas", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({
+        titulo,
+        prioridad
+    })
+});
 
         const datos = await respuesta.json();
 
