@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Login from "./components/Login";
+import Sidebar from "./components/Sidebar";
 
 function App() {
 
@@ -88,6 +89,7 @@ function App() {
 
     }, [usuario]);
 
+
     return (
 
         <div>
@@ -100,28 +102,123 @@ function App() {
 
                 <>
 
-                    <Navbar titulo="TaskFlow" />
-
-                    <h1>TaskFlow - Gestor de tareas</h1>
-
-                    <p>Mi gestor de tareas</p>
-
-                    <p>Bienvenido, {usuario.nombre}</p>
-
-                    <button onClick={obtenerPerfil}>
-                        Ver perfil
-                    </button>
-
-                    <button onClick={cerrarSesion}>
-                        Cerrar sesión
-                    </button>
-
-                    <TaskForm onTareaCreada={obtenerTareas} />
-
-                    <TaskList
-                        tareas={tareas}
-                        onTareaActualizada={obtenerTareas}
+                    <Navbar
+                        titulo="TaskFlow"
+                        onCerrarSesion={cerrarSesion}
                     />
+
+                    <div className="app-layout">
+
+                        <Sidebar />
+
+                        <main className="app-content">
+
+                            <section className="dashboard-header">
+
+                                <div>
+                                    <h1>Mis tareas</h1>
+
+                                    <p>
+                                        Organiza tus actividades y lleva el control de tu progreso.
+                                    </p>
+                                </div>
+
+                                <div className="welcome-card">
+                                    <span className="welcome-name">
+                                        Bienvenid@, {usuario.nombre}
+                                    </span>
+
+                                    <span className="welcome-date">
+                                        {new Date().toLocaleDateString("es-MX", {
+                                            weekday: "long",
+                                            day: "numeric",
+                                            month: "long",
+                                            year: "numeric"
+                                        })}
+                                    </span>
+                                </div>
+
+                                <button
+                                    className="profile-button"
+                                    onClick={obtenerPerfil}
+                                >
+                                    Ver perfil
+                                </button>
+
+                            </section>
+
+
+
+
+                            <section className="task-counters">
+
+                                <div className="counter-card">
+                                    <img
+                                        className="counter-image"
+                                        src="/Total.png"
+                                        alt=""
+                                    />
+                                    <div className="counter-info">
+                                        <span className="counter-label">Total de tareas</span>
+                                        <span className="counter-number">{tareas.length}</span>
+                                    </div>
+
+                                </div>
+
+                                <div className="counter-card">
+                                    <img
+                                        className="counter-image"
+                                        src="/Pendientes.png"
+                                        alt=""
+                                    />
+                                    <div className="counter-info">
+                                        <span className="counter-label">Pendientes</span>
+                                        <span className="counter-number">
+                                            {tareas.filter(
+                                                (tarea) => tarea.estado !== "completada"
+                                            ).length}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <div className="counter-card">
+                                    <img
+                                        className="counter-image"
+                                        src="/Completadas.png"
+                                        alt=""
+                                    />
+                                    <div className="counter-info">
+                                        <span className="counter-label">Completadas</span>
+                                        <span className="counter-number">
+                                            {tareas.filter(
+                                                (tarea) => tarea.estado === "completada"
+                                            ).length}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+
+
+                            <section className="dashboard-tasks">
+
+                                <TaskForm
+                                    onTareaCreada={obtenerTareas}
+                                />
+
+                                <TaskList
+                                    tareas={tareas}
+                                    onTareaActualizada={obtenerTareas}
+                                />
+
+                            </section>
+
+                        </main>
+
+                    </div>
 
                 </>
 
@@ -130,6 +227,7 @@ function App() {
         </div>
 
     );
+
 }
 
 export default App;
