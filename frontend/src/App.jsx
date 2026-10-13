@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
+import TaskChart from "./components/TaskChart";
 import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
 
@@ -147,9 +148,6 @@ function App() {
 
                             </section>
 
-
-
-
                             <section className="task-counters">
 
                                 <div className="counter-card">
@@ -203,18 +201,32 @@ function App() {
 
 
 
+
                             <section className="dashboard-tasks">
 
-                                <TaskForm
-                                    onTareaCreada={obtenerTareas}
-                                />
+                                <div className="task-creation-layout">
 
-                                <TaskList
-                                    tareas={tareas}
-                                    onTareaActualizada={obtenerTareas}
-                                />
+                                    <div className="task-form-container">
+                                        <TaskForm
+                                            onTareaCreada={obtenerTareas}
+                                        />
+                                    </div>
+
+                                    <div className="task-chart-container-wrapper">
+                                        <TaskChart tareas={tareas} />
+                                    </div>
+
+                                </div>
+
+                                <div className="task-list-container">
+                                    <TaskList
+                                        tareas={tareas}
+                                        onTareaActualizada={obtenerTareas}
+                                    />
+                                </div>
 
                             </section>
+
 
                         </main>
 

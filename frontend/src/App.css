@@ -207,7 +207,6 @@
 
 
 /* Contadores de tareas */
-/* Contadores de tareas */
 .task-counters {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -264,5 +263,31 @@
     .task-counters {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+}
+
+
+/* para la grafica */
+
+.task-creation-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+    align-items: stretch;
+    gap: 24px;
+}
+
+.task-form-container,
+.task-chart-container-wrapper,
+.task-list-container {
+    min-width: 0;
+}
+
+.task-list-container {
+    margin-top: 28px;
+}
+
+@media (max-width: 1000px) {
+    .task-creation-layout {
+        grid-template-columns: 1fr;
     }
 }

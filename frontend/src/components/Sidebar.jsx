@@ -19,6 +19,11 @@ function Sidebar() {
                     <span className="sidebar-icon">✓</span>
                     <span>Completadas</span>
                 </a>
+
+                <a href="#" className="sidebar-link">
+                    <span className="sidebar-icon">...</span>
+                    <span>Calendario</span>
+                </a>
             </nav>
         </aside>
     );

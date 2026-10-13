@@ -1,0 +1,105 @@
+
+.rich-text-editor {
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--blanco);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.rich-text-editor:focus-within {
+    border-color: var(--vino);
+    box-shadow: 0 0 0 3px rgba(155, 28, 69, 0.1);
+}
+
+.rich-text-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    padding: 9px;
+    border-bottom: 1px solid var(--borde);
+    background: #fff8fa;
+}
+
+.rich-text-toolbar button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    cursor: pointer;
+}
+
+.rich-text-toolbar button:hover:not(:disabled) {
+    background: #f4e2e8;
+    color: var(--vino-oscuro);
+}
+
+.rich-text-toolbar button.active {
+    background: var(--vino);
+    color: white;
+}
+
+.rich-text-toolbar button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.rich-text-divider {
+    width: 1px;
+    height: 23px;
+    margin: 0 3px;
+    background: var(--borde);
+}
+
+.rich-text-content {
+    min-height: 100px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 12px 14px;
+    color: var(--texto);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    outline: none;
+    overflow-wrap: anywhere;
+}
+
+.rich-text-content p {
+    margin: 0 0 8px;
+}
+
+.rich-text-content p:last-child {
+    margin-bottom: 0;
+}
+
+.rich-text-content h2 {
+    margin: 10px 0;
+    color: var(--vino-oscuro);
+    font-size: 1.3rem;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+    padding-left: 24px;
+}
+
+.rich-text-content:focus {
+    outline: none;
+}
+
+.rich-text-footer {
+    padding: 7px 12px;
+    border-top: 1px solid var(--borde);
+    background: #fff8fa;
+    color: var(--texto-secundario);
+    font-size: 0.76rem;
+}

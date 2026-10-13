@@ -22,17 +22,24 @@ export const obtenerTareas = async (peticion, respuesta) => {
     }
 };
 
+
+
 export const crearTarea = async (peticion, respuesta) => {
+    const {
+        titulo,
+        descripcion = "",
+        prioridad,
+        estado = "pendiente"
+    } = peticion.body;
 
-    const { titulo, prioridad } = peticion.body;
-
-    if (!titulo) {
+    if (!titulo || !titulo.trim()) {
         return respuesta.status(400).json({
             error: "El título es obligatorio"
         });
     }
 
     const prioridadesValidas = ["alta", "media", "baja"];
+    const estadosValidos = ["pendiente", "en_proceso", "completada"];
 
     if (!prioridadesValidas.includes(prioridad)) {
         return respuesta.status(400).json({
@@ -40,47 +47,65 @@ export const crearTarea = async (peticion, respuesta) => {
         });
     }
 
-    try {
+    if (!estadosValidos.includes(estado)) {
+        return respuesta.status(400).json({
+            error: "El estado no es válido"
+        });
+    }
 
+    try {
         const [resultado] = await conexion.query(
-            "INSERT INTO tareas (titulo, prioridad, usuario_id) VALUES (?, ?, ?)",
-            [titulo, prioridad, peticion.usuario.id]
+            `INSERT INTO tareas
+        (titulo, descripcion, prioridad, estado, usuario_id)
+       VALUES (?, ?, ?, ?, ?)`,
+            [
+                titulo.trim(),
+                descripcion?.trim() || null,
+                prioridad,
+                estado,
+                peticion.usuario.id
+            ]
         );
 
         respuesta.status(201).json({
             mensaje: "Tarea creada correctamente",
             tarea: {
                 id: resultado.insertId,
-                titulo: titulo,
-                prioridad: prioridad
+                titulo: titulo.trim(),
+                descripcion: descripcion?.trim() || null,
+                prioridad,
+                estado
             }
         });
-
     } catch (error) {
-
         console.error("Error al crear tarea:", error.message);
-
         respuesta.status(500).json({
             error: "Error al crear la tarea"
         });
-
     }
-
 };
 
-export const actualizarTarea = async (peticion, respuesta) => {
 
+
+
+export const actualizarTarea = async (peticion, respuesta) => {
     const id = Number(peticion.params.id);
 
-    const { titulo, prioridad } = peticion.body;
+    const {
+        titulo,
+        descripcion = "",
+        prioridad,
+        estado
+    } = peticion.body;
 
-    if (!titulo) {
+    if (!titulo || !titulo.trim()) {
         return respuesta.status(400).json({
             error: "El título es obligatorio"
         });
     }
 
     const prioridadesValidas = ["alta", "media", "baja"];
+    const estadosValidos = ["pendiente", "en_proceso", "completada"];
 
     if (!prioridadesValidas.includes(prioridad)) {
         return respuesta.status(400).json({
@@ -88,11 +113,25 @@ export const actualizarTarea = async (peticion, respuesta) => {
         });
     }
 
-    try {
+    if (!estadosValidos.includes(estado)) {
+        return respuesta.status(400).json({
+            error: "El estado debe ser pendiente, en_proceso o completada"
+        });
+    }
 
+    try {
         const [resultado] = await conexion.query(
-            "UPDATE tareas SET titulo = ?, prioridad = ? WHERE id = ? AND usuario_id = ?",
-            [titulo, prioridad, id, peticion.usuario.id]
+            `UPDATE tareas
+       SET titulo = ?, descripcion = ?, prioridad = ?, estado = ?
+       WHERE id = ? AND usuario_id = ?`,
+            [
+                titulo.trim(),
+                descripcion?.trim() || null,
+                prioridad,
+                estado,
+                id,
+                peticion.usuario.id
+            ]
         );
 
         if (resultado.affectedRows === 0) {
@@ -104,22 +143,22 @@ export const actualizarTarea = async (peticion, respuesta) => {
         respuesta.json({
             mensaje: "Tarea actualizada correctamente",
             tarea: {
-                id: id,
-                titulo: titulo,
-                prioridad: prioridad
+                id,
+                titulo: titulo.trim(),
+                descripcion: descripcion?.trim() || null,
+                prioridad,
+                estado
             }
         });
-
     } catch (error) {
-
         console.error("Error al actualizar tarea:", error.message);
-
         respuesta.status(500).json({
             error: "Error al actualizar la tarea"
         });
-
     }
 };
+
+
 
 export const eliminarTarea = async (peticion, respuesta) => {
 
